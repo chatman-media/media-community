@@ -72,9 +72,9 @@ bun run clean        # Очистка node_modules и кэша
 ### Docker команды
 
 ```bash
-bun run docker:up    # Запуск Docker контейнеров
-bun run docker:down  # Остановка Docker контейнеров
-bun run docker:logs  # Просмотр логов контейнеров
+docker-compose up -d       # Запуск Docker контейнеров
+docker-compose down        # Остановка Docker контейнеров
+docker-compose logs -f     # Просмотр логов контейнеров
 ```
 
 ### Frontend (apps/web)
@@ -129,12 +129,12 @@ chatman-media-community/
 - **Frontend**: http://localhost:2000
 - **Backend API**: http://localhost:2001
 - **API Health Check**: http://localhost:2001/health
-- **PostgreSQL**: localhost:5432
+- **PostgreSQL**: localhost:5433
   - User: `chatman`
   - Password: `chatman123`
   - Database: `chatman_db`
-- **Redis**: localhost:6379
-- **Adminer (DB UI)**: http://localhost:8080
+- **Redis**: localhost:6380
+- **Adminer (DB UI)**: http://localhost:8081
 
 ## Архитектура
 
