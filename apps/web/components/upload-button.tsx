@@ -1,9 +1,9 @@
 'use client'
 
+import { uploadFile } from '@/lib/upload'
 import { Upload } from 'lucide-react'
 import * as React from 'react'
 import { Button } from './ui/button'
-import { uploadFile } from '@/lib/upload'
 
 interface UploadButtonProps {
   onUploadComplete?: (url: string) => void
