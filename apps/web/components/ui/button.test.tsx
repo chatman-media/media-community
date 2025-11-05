@@ -34,7 +34,15 @@ describe('Button component', () => {
 
   it('should handle onClick', () => {
     let clicked = false
-    render(<Button onClick={() => (clicked = true)}>Click</Button>)
+    render(
+      <Button
+        onClick={() => {
+          clicked = true
+        }}
+      >
+        Click
+      </Button>
+    )
     const button = screen.getByText('Click')
     button.click()
     expect(clicked).toBe(true)

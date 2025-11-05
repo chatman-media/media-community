@@ -7,10 +7,12 @@ describe('User Entity', () => {
       id: '123',
       email: 'test@example.com',
       username: 'testuser',
-      password_hash: 'hashed_password',
+      passwordHash: 'hashed_password',
       role: 'user',
-      created_at: new Date(),
-      updated_at: new Date(),
+      isVerified: false,
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     })
 
     expect(user.id).toBe('123')
@@ -23,15 +25,17 @@ describe('User Entity', () => {
       id: '123',
       email: 'test@example.com',
       username: 'testuser',
-      password_hash: 'hashed_password',
+      passwordHash: 'hashed_password',
       role: 'user',
-      created_at: new Date(),
-      updated_at: new Date(),
+      isVerified: false,
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     })
 
     const json = user.toJSON()
 
-    expect(json).not.toHaveProperty('password_hash')
+    expect(json).not.toHaveProperty('passwordHash')
     expect(json).toHaveProperty('id')
     expect(json).toHaveProperty('email')
     expect(json).toHaveProperty('username')
@@ -42,10 +46,12 @@ describe('User Entity', () => {
       id: '123',
       email: 'test@example.com',
       username: 'testuser',
-      password_hash: 'hashed_password',
+      passwordHash: 'hashed_password',
       role: 'admin',
-      created_at: new Date(),
-      updated_at: new Date(),
+      isVerified: true,
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     })
 
     expect(user.role).toBe('admin')
