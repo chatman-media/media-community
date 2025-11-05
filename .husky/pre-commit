@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Run lint-staged for changed files
+echo "📝 Checking code style and formatting..."
+bunx lint-staged
+
+# Run typecheck (быстрее чем тесты)
+echo "🔎 Type checking..."
+bun run typecheck
+
+echo "✅ Pre-commit checks passed!"
+echo "💡 Run 'bun run test' manually before pushing"
