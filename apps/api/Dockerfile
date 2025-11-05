@@ -16,7 +16,7 @@ COPY packages/config/package.json ./packages/config/
 COPY packages/ui/package.json ./packages/ui/
 
 # Install dependencies
-RUN bun install --frozen-lockfile --production
+RUN bun install --frozen-lockfile
 
 # Copy source code
 COPY apps/api/src ./apps/api/src
