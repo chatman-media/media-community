@@ -26,12 +26,15 @@ Framework Preset: Next.js
 
 ```env
 # API Configuration (замените на URL вашего деплоя API)
-NEXT_PUBLIC_API_URL=https://your-api.railway.app
-NEXT_PUBLIC_WS_URL=wss://your-api.railway.app
+NEXT_PUBLIC_API_URL=https://your-api.koyeb.app
+NEXT_PUBLIC_WS_URL=wss://your-api.koyeb.app
 
 # App Configuration
 NEXT_PUBLIC_APP_URL=https://chatman-media.vercel.app
 NODE_ENV=production
+
+# Vercel Blob (для загрузки файлов)
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_YOUR_TOKEN_HERE
 ```
 
 ### 4. Деплой
@@ -51,7 +54,67 @@ NODE_ENV=production
 
 ### Рекомендуемые платформы для API:
 
-#### 🛤️ Вариант 1: Railway (Рекомендуется)
+#### 🚀 Вариант 1: Koyeb (Рекомендуется)
+
+Koyeb - платформа для деплоя с поддержкой Docker и автоматическим масштабированием.
+
+**1. Подготовка**
+
+Убедитесь, что в репозитории есть:
+- `apps/api/Dockerfile` ✅ (уже создан)
+- `.koyeb/config.yaml` ✅ (уже создан)
+
+**2. Создание проекта на Koyeb**
+
+1. Зайдите на [koyeb.com](https://www.koyeb.com)
+2. Нажмите "Create App"
+3. Выберите "Deploy from GitHub"
+4. Подключите ваш репозиторий
+5. Koyeb автоматически обнаружит Dockerfile
+
+**3. Настройка деплоя**
+
+```
+Docker Build Context: /
+Dockerfile Path: apps/api/Dockerfile
+Port: 2001
+Instance Type: nano (для старта, можно увеличить)
+```
+
+**4. Environment Variables**
+
+Добавьте в Koyeb Dashboard:
+
+```env
+PORT=2001
+NODE_ENV=production
+DATABASE_URL=postgresql://user:pass@host:5432/db
+REDIS_URL=redis://host:6379
+JWT_SECRET=your-production-secret-key
+JWT_EXPIRES_IN=7d
+CORS_ALLOWED_ORIGINS=https://chatman-media.vercel.app
+```
+
+**5. База данных**
+
+Для PostgreSQL и Redis можно использовать:
+- **Supabase** (PostgreSQL) - бесплатный tier
+- **Upstash** (Redis) - бесплатный tier
+
+Или добавить managed databases в Koyeb.
+
+**6. Деплой**
+
+Нажмите "Deploy" - Koyeb автоматически:
+- Соберет Docker образ
+- Запустит health check на `/health`
+- Выдаст публичный URL: `https://your-app.koyeb.app`
+
+**Готово!** API будет доступен на `https://your-app.koyeb.app`
+
+---
+
+#### 🛤️ Вариант 2: Railway
 
 Railway отлично работает с Turborepo и автоматически определяет настройки.
 
@@ -78,7 +141,7 @@ CORS_ALLOWED_ORIGINS=https://chatman-media.vercel.app
 
 7. Добавьте PostgreSQL и Redis плагины в Railway
 
-#### 🎨 Вариант 2: Render
+#### 🎨 Вариант 3: Render
 
 1. Зайдите на [render.com](https://render.com)
 2. "New" → "Web Service"
@@ -92,7 +155,7 @@ CORS_ALLOWED_ORIGINS=https://chatman-media.vercel.app
 
 5. Добавьте PostgreSQL и Redis в Render Dashboard
 
-#### ✈️ Вариант 3: Fly.io
+#### ✈️ Вариант 4: Fly.io
 
 1. Установите Fly CLI: `curl -L https://fly.io/install.sh | sh`
 2. Войдите: `fly auth login`
@@ -142,12 +205,95 @@ Railway предоставляет встроенные плагины для Po
 
 ---
 
+## 📦 Vercel Blob - Хранилище файлов
+
+Vercel Blob используется для загрузки и хранения файлов (изображения, видео, документы).
+
+### 1. Создание Blob Store
+
+1. Откройте ваш проект на [vercel.com](https://vercel.com)
+2. Перейдите в раздел **Storage**
+3. Нажмите **Create Database**
+4. Выберите **Blob**
+5. Дайте название (например, `chatman-files`)
+6. Нажмите **Create**
+
+### 2. Получение токена
+
+После создания Blob Store:
+1. Vercel автоматически создаст переменную `BLOB_READ_WRITE_TOKEN`
+2. Токен будет доступен в разделе **Environment Variables**
+3. Скопируйте токен в формате `vercel_blob_rw_XXXXX`
+
+### 3. Добавление в проект
+
+Vercel автоматически добавит `BLOB_READ_WRITE_TOKEN` в environment variables вашего проекта.
+
+**Для локальной разработки** добавьте в `.env.local`:
+```env
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_XXXXX
+```
+
+### 4. Использование
+
+Загрузка уже настроена в проекте:
+- **API Route**: `apps/web/app/api/upload/route.ts`
+- **Upload Component**: `apps/web/components/upload-button.tsx`
+- **Upload Utilities**: `apps/web/lib/upload.ts`
+
+**Пример использования компонента:**
+```tsx
+import { UploadButton } from '@/components/upload-button'
+
+<UploadButton
+  accept="image/*"
+  maxSize={10} // MB
+  onUploadComplete={(url) => {
+    console.log('File uploaded:', url)
+  }}
+/>
+```
+
+**Пример прямого использования:**
+```typescript
+import { uploadFile } from '@/lib/upload'
+
+const file = // ... получить File из input
+const result = await uploadFile(file)
+console.log(result.url) // Публичный URL файла
+```
+
+### 5. Оптимизация изображений
+
+Vercel Blob автоматически оптимизирует изображения. Используйте параметры URL:
+
+```typescript
+import { getOptimizedImageUrl } from '@/lib/upload'
+
+const optimizedUrl = getOptimizedImageUrl(originalUrl, {
+  width: 800,
+  quality: 80,
+  format: 'webp'
+})
+```
+
+### 6. Лимиты
+
+Бесплатный план Vercel включает:
+- **100 GB** трафика в месяц
+- **Неограниченное** количество файлов
+- **Автоматическая** оптимизация изображений
+
+---
+
 ## 📋 Checklist перед деплоем
 
+- [ ] Создать Vercel Blob Store и получить `BLOB_READ_WRITE_TOKEN`
 - [ ] Заменить `JWT_SECRET` на надежный ключ
 - [ ] Настроить CORS с правильным доменом frontend
-- [ ] Проверить все environment variables
+- [ ] Проверить все environment variables (Koyeb + Vercel)
 - [ ] Запустить миграции базы данных
+- [ ] Протестировать загрузку файлов в Vercel Blob
 - [ ] Настроить мониторинг (Sentry, LogRocket)
 - [ ] Настроить domain (custom domain в Vercel)
 
@@ -157,7 +303,7 @@ Railway предоставляет встроенные плагины для Po
 
 После настройки, при каждом пуше в `main`:
 - **Vercel** автоматически задеплоит frontend
-- **Railway/Render** автоматически задеплоит API
+- **Koyeb/Railway/Render** автоматически задеплоит API
 
 ## 🐛 Troubleshooting
 

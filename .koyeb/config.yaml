@@ -1,0 +1,33 @@
+name: chatman-api
+type: web
+
+build:
+  buildpack:
+    builder: heroku/builder:22
+  context: .
+  dockerfile: apps/api/Dockerfile
+
+instance:
+  type: nano
+
+ports:
+  - port: 2001
+    protocol: http
+
+env:
+  - key: NODE_ENV
+    value: production
+  - key: PORT
+    value: "2001"
+
+regions:
+  - fra
+
+healthcheck:
+  http:
+    path: /health
+    port: 2001
+
+autoscaling:
+  min: 1
+  max: 1
