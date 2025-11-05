@@ -1,0 +1,65 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: chatman-postgres
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: chatman
+      POSTGRES_PASSWORD: chatman123
+      POSTGRES_DB: chatman_db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./apps/api/src/infrastructure/database/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U chatman -d chatman_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - chatman-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: chatman-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - chatman-network
+
+  # Adminer для управления PostgreSQL (опционально)
+  adminer:
+    image: adminer:latest
+    container_name: chatman-adminer
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    networks:
+      - chatman-network
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  chatman-network:
+    driver: bridge
