@@ -1,0 +1,40 @@
+# Auto-labeling configuration for PRs
+
+frontend:
+  - apps/web/**/*
+
+backend:
+  - apps/api/**/*
+
+shared:
+  - packages/shared/**/*
+
+config:
+  - packages/config/**/*
+
+documentation:
+  - "**/*.md"
+  - docs/**/*
+
+dependencies:
+  - package.json
+  - bun.lock
+  - "**/package.json"
+
+docker:
+  - "**/Dockerfile"
+  - docker-compose.yml
+  - .dockerignore
+
+ci/cd:
+  - .github/**/*
+  - .koyeb/**/*
+  - vercel.json
+
+testing:
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/*.spec.ts"
+
+database:
+  - apps/api/src/infrastructure/database/**/*

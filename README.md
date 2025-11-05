@@ -1,5 +1,9 @@
 # Chatman.media - Сообщество свободных и креативных людей
 
+[![CI](https://github.com/yourusername/chatman-media-community/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/chatman-media-community/actions/workflows/ci.yml)
+[![Tests](https://github.com/yourusername/chatman-media-community/actions/workflows/test.yml/badge.svg)](https://github.com/yourusername/chatman-media-community/actions/workflows/test.yml)
+[![Docker Build](https://github.com/yourusername/chatman-media-community/actions/workflows/docker.yml/badge.svg)](https://github.com/yourusername/chatman-media-community/actions/workflows/docker.yml)
+
 ## 🎯 О проекте
 
 Chatman.media - это платформа для объединения творческих и свободных людей, которые стремятся выйти из системы страха и раскрыть свой творческий потенциал. Мы помогаем людям перейти от работы в системе к свободе и творчеству, предоставляя инструменты для продвижения, взаимопомощи и развития.
