@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { USER_ROLES, GROUP_ROLES, ROLE_PERMISSIONS } from './roles'
+import { GROUP_ROLES, ROLE_PERMISSIONS, USER_ROLES } from './roles'
 
 describe('roles constants', () => {
   describe('USER_ROLES', () => {
