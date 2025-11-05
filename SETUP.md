@@ -17,13 +17,13 @@ bun install
 ### 2. Запуск баз данных (PostgreSQL + Redis)
 
 ```bash
-bun run docker:up
+docker-compose up -d
 ```
 
 Это запустит:
-- PostgreSQL на порту `5432`
-- Redis на порту `6379`
-- Adminer (веб-интерфейс для PostgreSQL) на порту `8080`
+- PostgreSQL на порту `5433`
+- Redis на порту `6380`
+- Adminer (веб-интерфейс для PostgreSQL) на порту `8081`
 
 ### 3. Настройка переменных окружения
 
