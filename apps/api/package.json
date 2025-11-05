@@ -10,7 +10,7 @@
     "lint": "biome lint .",
     "format": "biome format --write .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest --run",
+    "test": "VITE_CJS_IGNORE_WARNING=true vitest --run",
     "test:watch": "vitest",
     "clean": "rm -rf dist .turbo node_modules"
   },
