@@ -1,0 +1,21 @@
+node_modules
+.next
+.turbo
+dist
+coverage
+*.log
+
+# Keep only web app for Vercel
+apps/api
+packages/config
+packages/shared/dist
+packages/ui/dist
+
+# Docker files
+docker-compose.yml
+.dockerignore
+Dockerfile
+
+# Documentation
+SETUP.md
+CLAUDE.md
